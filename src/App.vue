@@ -15,9 +15,9 @@
             <option value="ru">ru</option>
             <option value="eng">eng</option>
           </select>
- <!-- @input="city = $event.target.value" -->
-          <input
-            class="form-control me-2"
+          <!-- @input="city = $event.target.value" -->
+
+          <el-input
             @keyup.enter.prevent="getWeatherInfo"
             type="search"
             placeholder="Введите город"
@@ -25,14 +25,13 @@
             v-model="city"
             @input="сheckBtn"
           />
-          
           <button
             @click="getWeatherInfo"
             class="btn btn-outline-success show-btn"
             type="button"
             :disabled="!checkInput"
           >Узнать</button>
-            <el-button type="text" disabled>Text Button</el-button>
+          <el-button type="text" disabled>Text Button</el-button>
         </form>
       </nav>
     </div>
@@ -46,13 +45,12 @@
       :temp-min="tempMin"
       :temp-max="tempMax"
       :wind-speed="result.wind.speed"
-      :lang="lang" 
-    >
-    </weather-display>
-    <time-of-day  v-if="info" :check-sun="checkSun"></time-of-day>
- 
+      :lang="lang"
+    ></weather-display>
+    <time-of-day v-if="info" :check-sun="checkSun"></time-of-day>
+
     <div class>{{ result }}></div>
-    
+
     <!-- <lottie-animation
     path="./assets/sun.json"
     />-->
@@ -65,8 +63,8 @@
     <!-- <div >{{ result }}</div>
     <div>{{ currentTime }}</div>-->
     <page-not-found v-if="errorComponent"></page-not-found>
-                  <el-button type="text">Text Button</el-button>
-
+    <el-button type="text">Text Button</el-button>
+    <div>{{ timeNow }}</div>
   </div>
 </template>
 
@@ -74,7 +72,7 @@
 import axios from 'axios'
 import WeatherDisplay from './components/WeatherDisplay.vue'
 import TimeOfDay from './components/TimeOfDay.vue'
-import PageNotFound from  './components/PageNotFound.vue'
+import PageNotFound from './components/PageNotFound.vue'
 // import LottieAnimation from "lottie-vuejs/src/LottieAnimation.vue"; 
 // import {LottieAnimation} from 'lottie-web-vue'
 // 5363dff9978d55b37c53e8a1b5e0ffe9
@@ -92,59 +90,59 @@ export default {
       sunrise: '',
       sunset: '',
       // currentTime: parseInt(new Date().getTime() / 1000),
-      currentTime:'',
+      // currentTime:'',
       // sun: true,
       lang: 'ru',
       // temp: '',
       info: false,
       tempMax: '',
       tempMin: '',
-       errorComponent: false,
+      errorComponent: false,
       checkInput: false,
-     
+
       // windSpeed: ''
 
     }
   },
   methods: {
     getWeatherInfo() {
-     if(this.city.length > 2) {
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=1aeb00a26f09e25370d11fe4e01edbc5&units=metric&lang=${this.lang}`).then(val => {
-        console.log(val)
-        this.result = val.data
-        this.sunrise = this.result.sys.sunrise
-        this.sunset = this.result.sys.sunset
-        // this.temp = this.result.main.temp
-        this.tempMax = this.result.main.temp_max
-        this.tempMin = this.result.main.temp_min
-        // this.windSpeed = this.result.wind.speed
+      if (this.city.length > 2) {
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=1aeb00a26f09e25370d11fe4e01edbc5&units=metric&lang=${this.lang}`).then(val => {
+          console.log(val)
+          this.result = val.data
+          this.sunrise = this.result.sys.sunrise
+          this.sunset = this.result.sys.sunset
+          // this.temp = this.result.main.temp
+          this.tempMax = this.result.main.temp_max
+          this.tempMin = this.result.main.temp_min
+          // this.windSpeed = this.result.wind.speed
 
-        // this.currentTime = this.currentTime.getTimezoneOffset(this.result.timezone)
-        console.log(this.currentTime)
-        console.log(this.sunrise)
-        console.log(this.sunset)
-        this.info = true
-        if (this.currentTime > this.sunset) this.sun = false
-
-      })
-        .catch(function (error) {
-          if (error.response.status == '404') {
-           
-            this.errorComponent = true
-          }
+          // this.currentTime = this.currentTime.getTimezoneOffset(this.result.timezone)
+          console.log(this.currentTime)
+          console.log(this.sunrise)
+          console.log(this.sunset)
+          this.info = true
+          if (this.currentTime > this.sunset) this.sun = false
 
         })
-       } 
+          .catch(function (error) {
+            if (error.response.status == '404') {
+
+              this.errorComponent = true
+            }
+
+          })
+      }
     },
     buttonClicked() {
       this.$refs.anim.play()
 
     },
     сheckBtn() {
-     
+
       if (this.city.length > 2) {
-       
-      this.checkInput = true
+
+        this.checkInput = true
       }
       else this.checkInput = false
     }
@@ -159,9 +157,9 @@ export default {
         return false
       }
     },
-    timeNow(){
-      this.currentTime = new Date((this.result.dt+ this.result.timezone) * 1000).toUTCString()
-      return this.currentTime
+    timeNow() {
+      const currentTime = new Date((this.result?.sys?.sunrise) * 1000).toUTCString()
+      return currentTime
     }
 
   },
