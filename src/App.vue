@@ -48,7 +48,6 @@
       :wind-speed="result.wind.speed"
       :lang="lang" 
     >
-  
     </weather-display>
     <time-of-day  v-if="info" :check-sun="checkSun"></time-of-day>
  
@@ -66,6 +65,8 @@
     <!-- <div >{{ result }}</div>
     <div>{{ currentTime }}</div>-->
     <page-not-found v-if="errorComponent"></page-not-found>
+                  <el-button type="text">Text Button</el-button>
+
   </div>
 </template>
 
