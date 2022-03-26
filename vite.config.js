@@ -14,6 +14,7 @@ export default defineConfig({
       '~/': `${pathSrc}/`,
     },
   },
+  // добавьте этот scss  файл в src
   // css: {
   //   preprocessorOptions: {
   //     scss: {
