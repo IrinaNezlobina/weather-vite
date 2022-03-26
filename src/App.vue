@@ -37,6 +37,9 @@
     </div>
   </header>
   <div class="content">
+    <!--
+      Зачем WeatherDisplay столько пропсов? Можно ли передать их в виде одного объекта?
+    -->
     <weather-display
       v-if="info"
       :temp="result.main.temp"
@@ -46,22 +49,12 @@
       :temp-max="tempMax"
       :wind-speed="result.wind.speed"
       :lang="lang"
+      :result="result"
     ></weather-display>
     <time-of-day v-if="info" :check-sun="checkSun"></time-of-day>
 
     <div class>{{ result }}></div>
 
-    <!-- <lottie-animation
-    path="./assets/sun.json"
-    />-->
-
-    <!-- <lottie-animation
-  ref="anim"
-  :animationData="require('@/assets/sun.json')"
-    />-->
-
-    <!-- <div >{{ result }}</div>
-    <div>{{ currentTime }}</div>-->
     <page-not-found v-if="errorComponent"></page-not-found>
     <el-button type="text">Text Button</el-button>
     <div>{{ timeNow }}</div>
@@ -73,7 +66,7 @@ import axios from 'axios'
 import WeatherDisplay from './components/WeatherDisplay.vue'
 import TimeOfDay from './components/TimeOfDay.vue'
 import PageNotFound from './components/PageNotFound.vue'
-// import LottieAnimation from "lottie-vuejs/src/LottieAnimation.vue"; 
+// import LottieAnimation from "lottie-vuejs/src/LottieAnimation.vue";
 // import {LottieAnimation} from 'lottie-web-vue'
 // 5363dff9978d55b37c53e8a1b5e0ffe9
 export default {
@@ -100,7 +93,7 @@ export default {
       errorComponent: false,
       checkInput: false,
 
-      // windSpeed: ''
+     //  зачем  tempMax и tempMin  sunrise  sunset в виде отдельных свойств ?
 
     }
   },
@@ -108,6 +101,7 @@ export default {
     getWeatherInfo() {
       if (this.city.length > 2) {
         axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=1aeb00a26f09e25370d11fe4e01edbc5&units=metric&lang=${this.lang}`).then(val => {
+          // Поменяйте val на осмысленную переменную, типа weatherInfo
           console.log(val)
           this.result = val.data
           this.sunrise = this.result.sys.sunrise
@@ -116,13 +110,14 @@ export default {
           this.tempMax = this.result.main.temp_max
           this.tempMin = this.result.main.temp_min
           // this.windSpeed = this.result.wind.speed
-
+          // как я уже можно написал, это можно передавать одним объектом
           // this.currentTime = this.currentTime.getTimezoneOffset(this.result.timezone)
           console.log(this.currentTime)
           console.log(this.sunrise)
           console.log(this.sunset)
           this.info = true
           if (this.currentTime > this.sunset) this.sun = false
+          // Это чего тут?
 
         })
           .catch(function (error) {
@@ -139,6 +134,8 @@ export default {
 
     },
     сheckBtn() {
+      //  вот тут перенос в  computed  очень напрашивается
+      // Оно конечно и так работает но
 
       if (this.city.length > 2) {
 
@@ -158,7 +155,7 @@ export default {
       }
     },
     timeNow() {
-      const currentTime = new Date((this.result?.sys?.sunrise) * 1000).toUTCString()
+      const currentTime = new Date((this.result?.dt) * 1000).getUTCHours() + (this.result.timezone/3600)
       return currentTime
     }
 
@@ -166,6 +163,7 @@ export default {
   updated() {
   }
 }
+// удалите стили из style, которые будут не нужны
 </script>
 
 <style>
